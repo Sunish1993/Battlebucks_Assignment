@@ -6,3 +6,5 @@
 //
 
 import Foundation
+let kMain  = "Main"
+let kPlaceHolderImage = "placeholder"
