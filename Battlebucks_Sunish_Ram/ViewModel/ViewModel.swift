@@ -8,14 +8,15 @@
 import Foundation
 
 class ViewModel {
-    
+
+    var modelData : [ModelData]?
     let resource = Resource()
     
     func getData(completion:@escaping(_ isSucces:Bool) -> Void)
     {
         resource.getImagesData { result in
             guard let result = result else {return}
-            debugPrint("result__:\(result.count)")
+            self?.modelData = result
             _ = completion(true)
         }
     }
