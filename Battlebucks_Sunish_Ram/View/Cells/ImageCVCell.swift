@@ -9,9 +9,30 @@ import UIKit
 
 class ImageCVCell: UICollectionViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+     @IBOutlet weak var imgView: LazyImageView!
+    
+    static let imageCache = NSCache<NSString, UIImage>()
+ 
+    var imgDetailsModelData : ModelData?
+    {
+        didSet{
+            displayImageData()
+        }
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Reset image and cancel any pending image loading
+        imgView.image = UIImage(named: kPlaceHolderImage)
+        imgView.currentDataTask?.cancel()  // Cancel any running task
+    }
+
+    func displayImageData() {
+        guard let imageUrlString = imgDetailsModelData?.thumbnailUrl, let imageUrl = URL(string: imageUrlString) else {
+            return
+        }
+        imgView.loadImage(fromURL: imageUrl, placeHolderImage: kPlaceHolderImage)
+    }
+    
 
 }
