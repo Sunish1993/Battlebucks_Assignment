@@ -8,23 +8,41 @@
 import UIKit
 
 class ViewController: UIViewController {
-
     
+    @IBOutlet weak var lblLoadingData: UILabel!
+    @IBOutlet weak var CVImage: UICollectionView!
     let viewModel = ViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewModel.getData { isSucces in
-            if isSucces{
+        lblLoadingData.text = "Loading..."
+        CVImage.isHidden = true
+        CVImage.isPrefetchingEnabled = true
+        CVImage.prefetchDataSource = self
+
+        self.registerNib()
+        viewModel.getImageListData {[weak self] isSucces in
+            if isSucces
+            {
                 DispatchQueue.main.async {
-                    //update table
+                    self?.CVImage.isHidden = false
+                    self?.lblLoadingData.text = ""
+                    self?.CVImage.reloadData()
                 }
+            }else{
+                self?.CVImage.isHidden = true
+                self?.lblLoadingData.text = "Loading..."
             }
         }
         
     }
-
+    
+    private func registerNib()
+    {
+        let nibCard = UINib(nibName: ImageCVCell.identifier(), bundle: nil)
+        self.CVImage.register(nibCard, forCellWithReuseIdentifier: ImageCVCell.identifier())
+    }
+}
 
 }
 
